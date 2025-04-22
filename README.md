@@ -1,2 +1,53 @@
-# diploma-work
-System for collecting and analyzing prices in online stores
+# Аналізатор цін
+
+Система для збору та аналізу цін з онлайн-магазинів.
+
+## Вимоги
+
+- Node.js (v14 або вище)
+- MongoDB
+- npm або yarn
+
+## Встановлення
+
+1. Клонуйте репозиторій:
+```bash
+git clone [url-репозиторію]
+cd price-analyzer
+```
+
+2. Встановіть залежності:
+```bash
+npm install
+```
+
+3. Налаштуйте змінні середовища:
+- Скопіюйте файл `.env.example` в `.env`
+- Відредагуйте значення в `.env` відповідно до вашого середовища
+
+4. Запустіть MongoDB
+
+5. Запустіть додаток:
+```bash
+npm start
+```
+
+## Використання
+
+1. Відкрийте браузер і перейдіть за адресою `http://localhost:3000`
+2. Введіть назву товару в поле пошуку
+3. Натисніть кнопку "Пошук"
+4. Перегляньте результати пошуку
+
+## API Endpoints
+
+- `POST /api/search` - Пошук цін за назвою товару
+- `GET /api/prices/:productName` - Отримання історії цін для конкретного товару
+
+## Технології
+
+- Node.js
+- Express
+- Playwright
+- MongoDB
+- HTML/CSS/JavaScript
