@@ -1,5 +1,5 @@
 import { topsisRank } from '../src/services/topsis';
-import { Alternative } from '../src/types/optimizer';
+import { Alternative } from '../../../libs/shared/types/src/optimizer';
 import { getWeightsForMode } from '../src/utils/criteriaWeights';
 import chalk from 'chalk';
 

@@ -8,13 +8,12 @@ export type CriterionDirection = 'min' | 'max';
 
 /**
  * Повертає напрямки оптимізації для кожного критерію.
- * Напрямки є фіксованими: наприклад, ціну зазвичай мінімізують, а знижку — максимізують.
+ * Напрямки є фіксованими: наприклад, ціну зазвичай мінімізують, а рейтинг магазину — максимізують.
  */
 export function getCriteriaDirections(): Record<string, CriterionDirection> {
   return {
     price: 'min',
-    discount: 'max',
+    shopScore: 'max',
     deliveryTime: 'min',
-    shopCount: 'min',
   };
 }

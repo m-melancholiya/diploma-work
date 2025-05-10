@@ -1,20 +1,26 @@
 {
-    "compilerOptions": {
-      "target": "ES2020",
-      "module": "ESNext",
-      "moduleResolution": "Node",
-      "esModuleInterop": true,
-      "allowSyntheticDefaultImports": true,
-      "strict": true,
-      "forceConsistentCasingInFileNames": true,
-      "skipLibCheck": true,
-      "resolveJsonModule": true,
-      "isolatedModules": true,
-      "noEmit": true,
-      "baseUrl": ".",
-      "paths": {
-        "@/*": ["./*"]
-      }
-    },
-    "exclude": ["node_modules", "dist"]
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "baseUrl": ".",
+  "paths": {
+    "~/*": ["apps/basket-ui/*"],
+    "@/*": ["apps/basket-ui/*"],
+    "@types/*": ["libs/shared/types/src/*"],
+    "#app": ["apps/basket-ui/.nuxt/app"] // або .nuxt/types/app
   }
+  },
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

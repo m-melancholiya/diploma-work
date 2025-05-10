@@ -1,20 +1,17 @@
-export type OptimizationModeName = 'cheapest' | 'fastest' | 'discounted';
-export type RankingMethod = 'topsis' | 'wsm';
+import type {OptimizationModeName, RankingMethod} from '@libs/shared/types/src/optimizer'
 
 export interface CriteriaWeights {
     price: number;
     deliveryTime: number;
-    discount: number;
+    shopScore: number;
   }
 
 export function getWeightsForMode(mode: OptimizationModeName): CriteriaWeights {
   switch (mode) {
     case 'cheapest':
-      return { price: 0.7, deliveryTime: 0.2, discount: 0.1 };
+      return { price: 0.7, deliveryTime: 0.2, shopScore: 0.1 };
     case 'fastest':
-      return { price: 0.2, deliveryTime: 0.7, discount: 0.1 };
-    case 'discounted':
-      return { price: 0.3, deliveryTime: 0.1, discount: 0.6 };
+      return { price: 0.2, deliveryTime: 0.7, shopScore: 0.1 };
     default:
       throw new Error(`Unsupported optimization mode: ${mode}`);
   }

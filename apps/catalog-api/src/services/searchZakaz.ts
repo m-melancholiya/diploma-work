@@ -2,11 +2,10 @@ import axios from 'axios';
 import { ZakazProduct } from '../types/zakaz';
 
 export async function searchZakaz(query: string): Promise<ZakazProduct[]> {
-  const encodedQuery = encodeURIComponent(query);
 
   const res = await axios.get('https://stores-api.zakaz.ua/uber_catalog/products/search/', {
     params: {
-      q: encodedQuery,
+      q: query,
       per_page: 50,
       sort: 'relevance_desc'
     },

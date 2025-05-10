@@ -1,18 +1,35 @@
-import { Alternative } from '../types/optimizer';
+import { OptimizedCartResult } from '@libs/shared/types/src/optimizer-cart';
+import { Alternative } from '@libs/shared/types/src/optimizer';
 
-/**
- * Жадібний алгоритм: для кожного товару обирає альтернативу з найвищим рейтингом
- * @param ranked Альтернативи, вже відсортовані за score (TOPSIS або WSM)
- * @returns Оптимальний набір альтернатив (по одному для кожного товару)
- */
-export function solveGreedy(ranked: Alternative[]): Alternative[] {
-  const selected: Record<string, Alternative> = {};
+export function solveGreedy(
+  alternativesPerProduct: Alternative[][],
+  maxBudget?: number,
+  maxWeight?: number
+): OptimizedCartResult {
+  const selectedAlternatives: Alternative[] = [];
+  let totalPrice = 0;
+  let totalWeight = 0;
 
-  for (const item of ranked) {
-    if (!selected[item.productId]) {
-      selected[item.productId] = item;
+  for (const alternatives of alternativesPerProduct) {
+    for (const alt of alternatives) {
+      const nextTotalPrice = totalPrice + alt.price;
+      const nextTotalWeight = totalWeight + alt.weight;
+
+      if (
+        (maxBudget === undefined || nextTotalPrice <= maxBudget) &&
+        (maxWeight === undefined || nextTotalWeight <= maxWeight)
+      ) {
+        selectedAlternatives.push(alt);
+        totalPrice = nextTotalPrice;
+        totalWeight = nextTotalWeight;
+        break;
+      }
     }
   }
 
-  return Object.values(selected);
+  return {
+    selectedAlternatives,
+    totalPrice,
+    totalWeight
+  };
 }

@@ -1,4 +1,4 @@
-import { Alternative } from '../types/optimizer';
+import { Alternative } from '../../../../libs/shared/types/src/optimizer';
 import { CriteriaWeights } from '../utils/criteriaWeights';
 import { TopsisNormalization } from '../utils/normalization/TopsisNormalization';
 import { getCriteriaDirections } from '../utils/criteriaDirections';

@@ -7,37 +7,44 @@ import {
   Alternative,
   OptimizationRequest,
   OptimizationResponse
-} from '../types/optimizer'
+} from '@libs/shared/types/src/optimizer'
 
 const router = Router()
 
-router.post('/optimize', async (req, res) => {
-  try {
-    const { items, mode } = req.body as OptimizationRequest
+router.post('/optimize', (req, res) => {
+  const { items, mode, maxBudget } = req.body as OptimizationRequest & { maxBudget?: number }
 
-    const criteriaWeights = getWeightsForMode(mode.name)
+  const weights = getWeightsForMode(mode.name)
 
+  const selectedAlternativesPerProduct: Alternative[] = []
+  const fullRanking: Alternative[] = []
+
+  for (const product of items) {
     let ranked: Alternative[]
     if (mode.rankingMethod === 'topsis') {
-      ranked = topsisRank(items, criteriaWeights)
-    } else if (mode.rankingMethod === 'wsm') {
-      ranked = wsmRank(items, criteriaWeights)
+      ranked = topsisRank(product.alternatives, weights)
     } else {
-      return res.status(400).json({ error: 'Unsupported ranking method' })
+      ranked = wsmRank(product.alternatives, weights)
     }
 
-    const solution = solveGreedy(ranked)
+    fullRanking.push(...ranked)
 
-    const response: OptimizationResponse = {
-      ranking:       ranked,
-      selectedItems: solution
+    if (ranked.length > 0) {
+      selectedAlternativesPerProduct.push(ranked[0])
     }
-
-    res.json(response)
-  } catch (err) {
-    console.error(err)
-    res.status(500).json({ error: 'Internal server error' })
   }
-})
 
-export default router
+  const optimizedCart = solveGreedy(
+    selectedAlternativesPerProduct.map(alt => [alt]),
+    maxBudget
+  );
+
+  const response: OptimizationResponse = {
+    ranking: fullRanking,
+    selectedItems: optimizedCart.selectedAlternatives
+  };
+
+  res.json(response);
+});
+
+export default router;

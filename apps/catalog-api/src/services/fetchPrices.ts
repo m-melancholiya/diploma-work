@@ -1,7 +1,14 @@
 import axios from 'axios';
 import { StorePrice } from '../types/zakaz';
 
-export async function fetchPrices(productEan: string): Promise<StorePrice[]> {
+/**
+ * Отримання цін товару в різних магазинах + прогноз доставки
+ * 
+ * @param productEan EAN товару
+ * @param clientCoords Координати користувача у форматі "lat,lon" (опціонально)
+ * @returns Массив цін у магазинах
+ */
+export async function fetchPrices(productEan: string, clientCoords?: string): Promise<StorePrice[]> {
   const query = `
     query ProductRetailerCards(
       $storeIds: [String!]!,
@@ -50,7 +57,7 @@ export async function fetchPrices(productEan: string): Promise<StorePrice[]> {
     ],
     productEan,
     deliveryMethod: 'plan',
-    clientCoords: '',
+    clientCoords: clientCoords || '', // тепер якщо координати є, передаємо їх
     clientSettlementId: null,
     productTags: []
   };

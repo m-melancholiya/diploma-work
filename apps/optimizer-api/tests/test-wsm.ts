@@ -1,5 +1,5 @@
 import { wsmRank } from '../src/services/wsm';
-import { Alternative } from '../src/types/optimizer';
+import { Alternative } from '../../../libs/shared/types/src/optimizer';
 import { getWeightsForMode } from '../src/utils/criteriaWeights';
 
 const items: Alternative[] = [
