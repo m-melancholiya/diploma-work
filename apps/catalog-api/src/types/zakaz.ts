@@ -20,15 +20,16 @@ export interface ZakazProduct {
     bundle: number | null;
     tags: string[];
   }
-  
-  export interface StorePrice {
+
+export interface StorePrice {
     chainId: string;
     storeId: string;
     available: boolean;
-    price: number;
+    price: number; // в копійках
     ean: string;
-    deliveryTimeRange?: string | null;
-  }
+    deliveryTimeRange: string | null; // Оригінальний рядок від API, наприклад, "10:00-12:00"
+    deliveryTimeMinutes?: number;     // Розрахований час доставки в хвилинах від поточного моменту
+}
 
   export interface GeocodeResult {
     coords: {

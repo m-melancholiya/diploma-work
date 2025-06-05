@@ -1,33 +1,45 @@
-import { Alternative } from '../../../../libs/shared/types/src/optimizer';
+import { AlternativePayload } from '@libs/shared/types/src/optimizer';
 import { CriteriaWeights } from '../utils/criteriaWeights';
 import { TopsisNormalization } from '../utils/normalization/TopsisNormalization';
 import { getCriteriaDirections } from '../utils/criteriaDirections';
+import { getShopScore } from '../utils/shopScoreCalculator';
 
-export function topsisRank(items: Alternative[], weights: CriteriaWeights): Alternative[] {
+export function topsisRank(items: AlternativePayload[], weights: CriteriaWeights): AlternativePayload[] {
+  if (!items || items.length === 0) {
+    console.log('[topsisRank] Вхідний масив альтернатив порожній.');
+    return [];
+  }
+
   const criteriaKeys = Object.keys(weights) as (keyof CriteriaWeights)[];
   const directions = getCriteriaDirections();
 
-  // Крок 1: Побудова матриці прийняття рішень
   const matrix = items.map(item =>
-    criteriaKeys.map(k => (item[k] ?? 0) as number)
+      criteriaKeys.map(key => {
+        if (key === 'shopScore') {
+          return typeof item.shopScore === 'number' && !isNaN(item.shopScore)
+              ? item.shopScore
+              : getShopScore(item.shop);
+        }
+        const raw = item[key as keyof AlternativePayload];
+        return typeof raw === 'number' && !isNaN(raw) ? raw : 0;
+      })
   );
-  console.log('\n📌 Крок 1: Матриця прийняття рішень');
+  console.log('\n[TOPSIS] \ud83d\udccc Крок 1: Матриця прийняття рішень');
   console.table(matrix);
 
-  // Крок 2: Нормалізація
   const normalizer = new TopsisNormalization();
   const normalizedMatrix = normalizer.normalize(matrix);
-  console.log('\n📌 Крок 2: Нормалізована матриця');
-  console.table(normalizedMatrix);
+  const displayMatrix = normalizedMatrix.map(row => row.map(v => Number(v.toFixed(2))));
+  console.log('\n[TOPSIS] \ud83d\udccc Крок 2: Нормалізована матриця');
+  console.table(displayMatrix);
 
-  // Крок 3: Помноження на ваги
   const weightedMatrix = normalizedMatrix.map(row =>
-    row.map((val, j) => val * weights[criteriaKeys[j]])
+      row.map((val, j) => val * weights[criteriaKeys[j]])
   );
-  console.log('\n📌 Крок 3: Зважена матриця');
-  console.table(weightedMatrix);
+  console.log('\n[TOPSIS] \ud83d\udccc Крок 3: Зважена матриця');
+  const displayWeightedMatrix = weightedMatrix.map(row => row.map(v => Number(v.toFixed(2))));
+  console.table(displayWeightedMatrix);
 
-  // Крок 4: Пошук PIS (ідеальна) та NIS (антиідеальна) точок
   const ideal = criteriaKeys.map((k, j) => {
     const values = weightedMatrix.map(r => r[j]);
     return directions[k] === 'max' ? Math.max(...values) : Math.min(...values);
@@ -36,43 +48,34 @@ export function topsisRank(items: Alternative[], weights: CriteriaWeights): Alte
     const values = weightedMatrix.map(r => r[j]);
     return directions[k] === 'max' ? Math.min(...values) : Math.max(...values);
   });
-  console.log('\n📌 Крок 4: PIS (ідеальне рішення)');
-  console.log(ideal);
-  console.log('\n📌 Крок 4: NIS (антиідеальне рішення)');
-  console.log(antiIdeal);
+  console.log('\n[TOPSIS] \ud83d\udccc Крок 4: Ідеальне (PIS) та антиідеальне (NIS) рішення');
+  console.log('PIS:', ideal);
+  console.log('NIS:', antiIdeal);
 
-  // Крок 5: Обчислення евклідових відстаней (dPlus та dMinus)
-  console.log('\n📌 Крок 5: Обчислення відстаней до PIS (dPlus) та NIS (dMinus)');
   const dPlusArray = weightedMatrix.map(row =>
-    Math.sqrt(
-      row.reduce((sum, val, j) => sum + Math.pow(val - ideal[j], 2), 0)
-    )
+      Math.sqrt(row.reduce((sum, val, j) => sum + Math.pow(val - ideal[j], 2), 0))
   );
-  console.log('dPlus:');
-  console.table(dPlusArray);
-
   const dMinusArray = weightedMatrix.map(row =>
-    Math.sqrt(
-      row.reduce((sum, val, j) => sum + Math.pow(val - antiIdeal[j], 2), 0)
-    )
+      Math.sqrt(row.reduce((sum, val, j) => sum + Math.pow(val - antiIdeal[j], 2), 0))
   );
-  console.log('dMinus:');
-  console.table(dMinusArray);
+  console.log('\n[TOPSIS] \ud83d\udccc Крок 5: Відстані до PIS (d+) та NIS (d-)');
+  console.table({ dPlusArray, dMinusArray });
 
-  // Крок 6: Обчислення TOPSIS score
-  console.log('\n📌 Крок 6: Розрахунок TOPSIS score');
   const scores = dPlusArray.map((dPlus, i) => {
     const dMinus = dMinusArray[i];
-    return dPlus + dMinus === 0 ? 0 : dMinus / (dPlus + dMinus);
+    return dPlus + dMinus === 0 ? 0.5 : dMinus / (dPlus + dMinus);
   });
+  console.log('\n[TOPSIS] \ud83d\udccc Крок 6: TOPSIS score');
   console.table(scores);
 
-  // Крок 7: Сортування альтернатив за TOPSIS score
-  console.log('\n📌 Крок 7: Відсортовані альтернативи за TOPSIS score');
-  const result = items
-    .map((item, i) => ({ ...item, score: scores[i] }))
-    .sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
-  console.table(result.map(r => ({ id: r.id, score: r.score })));
+  const result = items.map((item, i) => ({ ...item, score: scores[i] }))
+      .sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
+
+  console.log('\n[TOPSIS] \ud83d\udccc Крок 7: Відсортовані альтернативи');
+  console.table(result.map(r => ({
+    shop: r.shop,
+    score: r.score?.toFixed(4)
+  })));
 
   return result;
 }

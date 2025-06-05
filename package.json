@@ -4,9 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev:catalog": "tsx apps/catalog-api/src/main.ts",
-    "dev:optimizer": "tsx apps/optimizer-api/src/main.ts",
-    "dev:basket": "pnpm --filter basket-ui dev"
+    "dev": "concurrently -n catalog-api,optimizer-api,basket-ui -c green,cyan,magenta \"pnpm --filter catalog-api dev\" \"pnpm --filter optimizer-api dev\" \"pnpm --filter basket-ui dev\""
   },
   "keywords": [],
   "author": "",
@@ -14,6 +12,7 @@
   "devDependencies": {
     "@types/express": "4",
     "chalk": "^5.4.1",
+    "concurrently": "^9.1.2",
     "eslint": "^9.25.0",
     "pinia": "^3.0.2",
     "tsx": "^4.19.3",

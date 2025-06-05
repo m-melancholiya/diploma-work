@@ -1,21 +1,13 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "useDefineForClassFields": true,
-    "module": "ESNext",
-    "moduleResolution": "node",
-    "strict": true,
-    "jsx": "preserve",
-    "sourceMap": true,
-    "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "lib": ["ESNext", "DOM"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@shared/*": ["../libs/shared/types/src/*"]
-    },
-    "allowImportingTsExtensions": true
+      "@libs/*": ["../../libs/*"]
+    }
   },
-  "include": ["src/**/*.ts", "src/**/*.vue", "src/**/*.d.ts"]
+  "include": [
+    "src",
+    "../../libs/shared/types/src"
+  ]
 }

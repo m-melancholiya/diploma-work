@@ -1,7 +1,18 @@
 {
-    "extends": "../../tsconfig.base.json",
-    "compilerOptions": {
-      "outDir": "dist"
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "outDir": "dist",
+    "baseUrl": ".",
+    "paths": {
+      "@libs/*": ["../../libs/*"]
     },
-    "include": ["src", "../../libs/shared/types/src/optimizer.ts"]
-  }
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "strict": true,
+    "skipLibCheck": true
+  },
+  "include": ["src", "../../libs/shared"],
+  "exclude": ["node_modules", "dist"]
+}

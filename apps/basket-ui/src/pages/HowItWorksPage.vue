@@ -53,9 +53,6 @@ const advantages = ref([
 </script>
 
 <style scoped>
-.text-primary { /* Забезпечує використання основного кольору теми для заголовка */
-  color: var(--v-theme-primary) !important;
-}
 .fill-height {
   height: 100%;
 }

@@ -1,25 +1,21 @@
-import '@mdi/font/css/materialdesignicons.css' // Іконки Material Design
-import 'vuetify/styles' // Стилі Vuetify
+import '@mdi/font/css/materialdesignicons.css'
+import 'vuetify/styles'
 import { createVuetify, ThemeDefinition } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 
-// Приклад визначення власної світлої теми
 const myCustomLightTheme: ThemeDefinition = {
     dark: false,
     colors: {
-        background: '#FFFFFF', // Білий фон
-        surface: '#FFFFFF',    // Білий для поверхонь компонентів (картки, меню)
-        primary: '#1976D2',    // Основний синій (Vuetify default)
-        'primary-darken-1': '#1565C0',
-        secondary: '#424242',  // Темно-сірий
-        'secondary-darken-1': '#212121',
-        error: '#B00020',      // Червоний для помилок
-        info: '#2196F3',       // Блакитний для інформації
-        success: '#4CAF50',    // Зелений для успіху
-        warning: '#FB8C00',    // Помаранчевий для попереджень
-        // Додайте інші кольори за потреби
-        'blue-lighten-1': '#64B5F6', // Світло-блакитний для прикладу на HomePage
+        background: '#FFFFFF',      // Загальний фон сторінок
+        surface: '#FFFFFF',         // Фон для елементів типу v-card, v-sheet
+        primary: '#356859',         // Ваш основний зелений
+        'primary-darken-1': '#2A524F', // Трохи темніший зелений
+        error: '#B00020',
+        info: '#2196F3',
+        success: '#4CAF50',
+        warning: '#FB8C00',
+        'app-bar-background': '#FFFBE6', // Ваш кремовий/бежевий для AppBar
     }
 }
 
@@ -27,11 +23,9 @@ export default createVuetify({
     components,
     directives,
     theme: {
-        defaultTheme: 'myCustomLightTheme', // Встановлення власної теми за замовчуванням
+        defaultTheme: 'myCustomLightTheme',
         themes: {
             myCustomLightTheme,
-            // Тут можна додати інші теми, наприклад, темну
-            // myCustomDarkTheme: { ... }
         }
     }
 })

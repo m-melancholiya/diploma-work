@@ -15,8 +15,8 @@
   "paths": {
     "~/*": ["apps/basket-ui/*"],
     "@/*": ["apps/basket-ui/*"],
-    "@types/*": ["libs/shared/types/src/*"],
-    "#app": ["apps/basket-ui/.nuxt/app"] // або .nuxt/types/app
+    "@libs/shared/*": ["libs/shared/*"],
+    "#app": ["apps/basket-ui/.nuxt/app"]
   }
   },
   "exclude": [
